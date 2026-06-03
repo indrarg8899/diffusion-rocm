@@ -1,0 +1,57 @@
+# SDXL Pipeline Configuration
+# Stable Diffusion XL Base 1.0
+
+model:
+  name: "stabilityai/stable-diffusion-xl-base-1.0"
+  type: "sdxl"
+
+pipeline:
+  dtype: "float16"
+  device: "cuda"
+  use_flash_attention: true
+  vae_tiled: true
+  vae_tile_size: 512
+  channels_last: true
+  compile_model: false
+
+unet:
+  in_channels: 4
+  model_channels: 320
+  channel_mult: [1, 2, 4, 4]
+  num_res_blocks: 2
+  attention_resolutions: [1, 2, 4]
+  context_dim: 2048
+  num_heads: 16
+  time_dim: 1280
+
+text_encoder:
+  encoder_1:
+    model: "openai/clip-vit-large-patch14"
+    hidden_size: 1024
+    num_layers: 23
+    max_length: 77
+  encoder_2:
+    model: "laion/CLIP-ViT-bigG-14-laion2B-39B-b160k"
+    hidden_size: 1280
+    num_layers: 32
+    max_length: 77
+
+vae:
+  in_channels: 3
+  latent_channels: 4
+  base_channels: 128
+  channel_mult: [1, 2, 4, 4]
+  num_res_blocks: 2
+
+scheduler:
+  default: "euler_a"
+  num_train_timesteps: 1000
+  beta_start: 0.000085
+  beta_end: 0.012
+
+defaults:
+  width: 1024
+  height: 1024
+  steps: 30
+  guidance_scale: 7.5
+  negative_prompt: "ugly, blurry, low quality, watermark"

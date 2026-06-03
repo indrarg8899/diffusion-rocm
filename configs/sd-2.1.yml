@@ -1,0 +1,52 @@
+# SD 2.1 Pipeline Configuration
+# Stable Diffusion 2.1 (v-768)
+
+model:
+  name: "stabilityai/stable-diffusion-2-1"
+  type: "sd2"
+
+pipeline:
+  dtype: "float16"
+  device: "cuda"
+  use_flash_attention: true
+  vae_tiled: false
+  vae_tile_size: 512
+  channels_last: true
+  compile_model: false
+
+unet:
+  in_channels: 4
+  model_channels: 320
+  channel_mult: [1, 2, 4, 4]
+  num_res_blocks: 2
+  attention_resolutions: [1, 2, 4]
+  context_dim: 1024
+  num_heads: 8
+  time_dim: 1280
+
+text_encoder:
+  encoder_1:
+    model: "openai/clip-vit-large-patch14-336"
+    hidden_size: 1024
+    num_layers: 23
+    max_length: 77
+
+vae:
+  in_channels: 3
+  latent_channels: 4
+  base_channels: 128
+  channel_mult: [1, 2, 4, 4]
+  num_res_blocks: 2
+
+scheduler:
+  default: "dpm++"
+  num_train_timesteps: 1000
+  beta_start: 0.00085
+  beta_end: 0.012
+
+defaults:
+  width: 768
+  height: 768
+  steps: 25
+  guidance_scale: 7.5
+  negative_prompt: "ugly, blurry, low quality"
